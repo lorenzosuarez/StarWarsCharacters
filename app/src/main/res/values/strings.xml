@@ -1,0 +1,69 @@
+<resources>
+    <string name="app_name">StarWarsCharacters</string>
+    <string name="my_galactic_league">My Galactic League</string>
+    <string name="get_data_error">There was an error getting the data</string>
+    <string name="character">Character</string>
+    <string name="planets">Planets</string>
+    <string name="starships">Starships</string>
+    <string name="race">Race</string>
+    <string name="details">Details</string>
+
+    <string name="unknown">unknown</string>
+
+    <!-- Common -->
+    <string name="name">Name</string>
+    <string name="films">Films</string>
+    <string name="created">Created</string>
+    <string name="edited">Edited</string>
+    <string name="url">URL</string>
+    <string name="homeworld">Home world</string>
+
+    <!-- Starships -->
+    <string name="model">Model</string>
+    <string name="manufacturer">Manufacturer</string>
+    <string name="cost_in_credits">Cost in credits</string>
+    <string name="length">Length</string>
+    <string name="max_atmosphering_speed">Max atmosphering speed</string>
+    <string name="crew">Crew</string>
+    <string name="passengers">Passengers</string>
+    <string name="cargo_capacity">Cargo capacity</string>
+    <string name="consumables">Consumables</string>
+    <string name="hyperdrive_rating">Hyperdrive rating</string>
+    <string name="mglt">MGLT</string>
+    <string name="starship_class">Starship class</string>
+    <string name="pilots">Pilots</string>
+
+    <!-- People -->
+    <string name="height">Height</string>
+    <string name="mass">Mass</string>
+    <string name="hair_color">Hair color</string>
+    <string name="skin_color">Skin color</string>
+    <string name="eye_color">Eye color</string>
+    <string name="birth_year">Birth year</string>
+    <string name="gender">Gender</string>
+    <string name="species">Species</string>
+    <string name="vehicles">Vehicles</string>
+
+    <!-- Planet -->
+    <string name="rotation_period">Rotation period</string>
+    <string name="orbital_period">Orbital period</string>
+    <string name="diameter">Diameter</string>
+    <string name="climate">Climate</string>
+    <string name="gravity">Gravity</string>
+    <string name="terrain">Terrain</string>
+    <string name="surface_water">Surface water</string>
+    <string name="population">Population</string>
+    <string name="residents">Residents</string>
+
+    <!-- Species -->
+    <string name="classification">Classification</string>
+    <string name="designation">Designation</string>
+    <string name="average_height">Average height</string>
+    <string name="skin_colors">Skin colors</string>
+    <string name="hair_colors">Hair colors</string>
+    <string name="eye_colors">Eye colors</string>
+    <string name="average_lifespan">Average lifespan</string>
+    <string name="language">Language</string>
+    <string name="people">People</string>
+
+</resources>
