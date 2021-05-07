@@ -66,4 +66,24 @@
     <string name="language">Language</string>
     <string name="people">People</string>
 
+    <!-- MSG -->
+    <string name="removed_gl">Removed from My Galactic League</string>
+    <string name="added_gl">Added to My Galactic League</string>
+    <string name="select_option">Select option</string>
+    <string name="view_detail">View detail</string>
+    <string name="add_to_league">Add to league</string>
+    <string name="create_league">Create League</string>
+    <string name="unknown_error">unknown_error</string>
+
+    <string name="no_race_for_character">Only characters of the selected races can be added</string>
+    <string name="already_exists">Already exists in your league</string>
+
+    <string name="maximum_characters_added">Maximum Characters added</string>
+    <string name="maximum_races_added">Maximum Races added</string>
+    <string name="maximum_starships_added">Maximum Starships added</string>
+    <string name="maximum_planets_added">Maximum Planets added</string>
+
+
+
+
 </resources>

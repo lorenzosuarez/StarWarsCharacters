@@ -1,7 +1,7 @@
 package com.example.starwarscharacters.vo
 
 import com.example.starwarscharacters.application.AppConstants.BASE_URL
-import com.example.starwarscharacters.domain.WebService
+import com.example.starwarscharacters.data.remote.WebService
 import com.google.gson.GsonBuilder
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

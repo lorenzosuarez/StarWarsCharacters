@@ -13,6 +13,10 @@ object AppConstants {
     //ROOM
     const val DATABASE_NAME = "cocktail_table"
 
-    //PAGE MAX
-    const val  PAGE_SIZE = 10
+    //MAXIMUS VALUES
+    const val PAGE_SIZE = 10
+    const val MAX_RACES = 3
+    const val MAX_CHARACTERS = 6
+    const val MAX_PLANETS = 2
+    const val MAX_STARSHIPS = 3
 }

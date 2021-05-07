@@ -40,4 +40,21 @@ class RepositoryImpl(private val dataSource: DataSource) : Repository {
     override suspend fun getPlanets(): Resource<PlanetList> {
         return dataSource.getPlanets()
     }
+
+
+    //
+    override suspend fun getLocalCharacters(): Resource<List<CharacterEntity>> {
+        return dataSource.getLocalCharacters()
+    }
+
+    override suspend fun insertCharacter(characterEntity: CharacterEntity) {
+        dataSource.insertCharacterIntoRoom(characterEntity)
+    }
+
+    override suspend fun deleteCharacter(characterEntity: CharacterEntity) {
+        dataSource.deleteCharacterFromRoom(characterEntity)
+    }
+
+    override suspend fun characterInLeague(url: String) : Boolean =
+        dataSource.characterInLeague(url)
 }

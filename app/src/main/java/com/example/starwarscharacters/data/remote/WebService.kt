@@ -1,4 +1,4 @@
-package com.example.starwarscharacters.domain
+package com.example.starwarscharacters.data.remote
 
 import com.example.starwarscharacters.data.model.CharacterList
 import com.example.starwarscharacters.data.model.PlanetList

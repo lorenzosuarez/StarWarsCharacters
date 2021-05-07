@@ -1,5 +1,6 @@
 package com.example.starwarscharacters.data
 
+import com.example.starwarscharacters.application.AppDatabase
 import com.example.starwarscharacters.data.model.*
 import com.example.starwarscharacters.vo.Resource
 import com.example.starwarscharacters.vo.RetrofitClient
@@ -8,7 +9,7 @@ import com.example.starwarscharacters.vo.RetrofitClient
  * Created by Lorenzo Suarez on 3/5/2021.
  */
 
-class DataSource {
+class DataSource(private val appDatabase: AppDatabase) {
     suspend fun charactersFromPage(page : Int): CharacterList {
         return RetrofitClient.webService.charactersFromPage(page = page)
     }
@@ -39,6 +40,24 @@ class DataSource {
 
     suspend fun getPlanets(): Resource<PlanetList> {
         return Resource.Success(RetrofitClient.webService.getPlanets())
+    }
+
+
+    //Room
+    suspend fun insertCharacterIntoRoom(characterEntity: CharacterEntity){
+        appDatabase.itemDao().insertCharacterToLeague(characterEntity)
+    }
+
+    suspend fun getLocalCharacters(): Resource<List<CharacterEntity>> {
+        return Resource.Success(appDatabase.itemDao().getCharactersLeague())
+    }
+
+    suspend fun characterInLeague(url: String) : Boolean {
+        return appDatabase.itemDao().characterInLeague(url) != null
+    }
+
+    suspend fun deleteCharacterFromRoom(characterEntity: CharacterEntity) {
+        appDatabase.itemDao().deleteCharacterFromLeague(characterEntity)
     }
 
 }

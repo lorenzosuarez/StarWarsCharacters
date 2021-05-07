@@ -2,16 +2,25 @@ package com.example.starwarscharacters.ui
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.*
-import android.widget.Toast
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
+import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import com.example.starwarscharacters.R
+import com.example.starwarscharacters.application.AppDatabase
+import com.example.starwarscharacters.data.DataSource
 import com.example.starwarscharacters.data.model.*
 import com.example.starwarscharacters.databinding.FragmentDetailsBinding
+import com.example.starwarscharacters.domain.RepositoryImpl
+import com.example.starwarscharacters.ui.viewModel.MainViewModel
+import com.example.starwarscharacters.ui.viewModel.ViewModelFactory
+import com.example.starwarscharacters.utils.showToast
 import kotlinx.android.synthetic.main.item_detail.view.*
-import kotlinx.android.synthetic.main.item_detail.view.title
-import kotlinx.android.synthetic.main.item_row.view.*
+import kotlinx.coroutines.launch
 
 
 /**
@@ -19,16 +28,28 @@ import kotlinx.android.synthetic.main.item_row.view.*
  */
 
 class DetailsFragment : Fragment(R.layout.fragment_details) {
-    private lateinit var item: Item
+    private lateinit var itemReceived: Item
     private lateinit var binding: FragmentDetailsBinding
     private lateinit var viewInflater: View
+    private lateinit var itemType: ItemType
+    private var isInTheLeague: Boolean? = null
+
+    private val viewModel by activityViewModels<MainViewModel> {
+        ViewModelFactory(
+            RepositoryImpl(
+                DataSource(
+                    AppDatabase.getDatabase(requireActivity().applicationContext)
+                )
+            )
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         requireArguments().let {
             DetailsFragmentArgs.fromBundle(it).also { args ->
-                item = args.item
+                itemReceived = args.item
             }
         }
     }
@@ -43,29 +64,73 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
         super.onViewCreated(view, savedInstanceState)
         binding = FragmentDetailsBinding.bind(view)
 
-        val itemType: ItemType = item.itemType
+        itemType = itemReceived.itemType
 
         when {
-            itemType.isCharacter() -> inflateWithCharacter((item as Character))
-            itemType.isRace() -> inflateWithRace((item as Race))
-            itemType.isStarship() -> inflateWithStarship((item as Starship))
-            itemType.isPlanet() -> inflateWithPlanet((item as Planet))
+            itemType.isCharacter() -> inflateWithCharacter((itemReceived as Character))
+            itemType.isRace() -> inflateWithRace((itemReceived as Race))
+            itemType.isStarship() -> inflateWithStarship((itemReceived as Starship))
+            itemType.isPlanet() -> inflateWithPlanet((itemReceived as Planet))
         }
+
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         menu.findItem(R.id.statusInLeague).isVisible = true
         menu.findItem(R.id.myGalacticLeague).isVisible = false
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            isInTheLeague = when (itemType) {
+                ItemType.CHARACTER -> viewModel.characterInLeague((itemReceived as Character))
+                ItemType.RACE -> viewModel.raceInLeague((itemReceived as Race))
+                ItemType.STARSHIP -> viewModel.starshipInLeague((itemReceived as Starship))
+                ItemType.PLANET -> viewModel.planetInLeague((itemReceived as Planet))
+            }
+            updateIcon(menu.findItem(R.id.statusInLeague))
+        }
+
         super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.statusInLeague -> {
-                item.icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_star_on)
+                when {
+                    itemType.isCharacter() -> {
+                        val character = (itemReceived as Character)
+                        when (isInTheLeague) {
+                            true -> viewModel.deleteFromLeague(character.asCharacter())
+                            else -> viewModel.insertToLeague(character.asCharacter())
+                        }
+                    }
+                    itemType.isRace() -> {
+                    }
+                    itemType.isStarship() -> {
+                    }
+                    itemType.isPlanet() -> {
+                    }
+                }
+
+                isInTheLeague = isInTheLeague?.not()
+                showToast(
+                    requireContext().getString(
+                        when (isInTheLeague) {
+                            true -> R.string.added_gl
+                            else -> R.string.removed_gl
+                        }
+                    )
+                )
+                updateIcon(item)
                 false
             }
             else -> false
+        }
+    }
+
+    private fun updateIcon(item: MenuItem) {
+        item.icon = when (isInTheLeague) {
+            true -> ContextCompat.getDrawable(requireContext(), R.drawable.ic_star_on)
+            else -> ContextCompat.getDrawable(requireContext(), R.drawable.ic_star_off)
         }
     }
 
