@@ -11,9 +11,12 @@ This is a clean architecture app example built with
 - Navigation Components
 - DataBinding
 
-![main_screen_dark](/screenshots/main_screen_dark.png?raw=true "First screen")
-![main_screen](/screenshots/main_screen_.png?raw=true "Second screen")
-![main_screen_](/screenshots/options_dark.png?raw=true "Third screen")
-![main_screen_](/screenshots/options.png?raw=true "Fourth screen")
+# Screenshots
+| Main Screen Dark | My League Dark |
+|:-:|:-:|
+| ![1](screenshots/main_screen_dark.png?raw=true) | ![2](screenshots/options_dark.png?raw=true) |
+| Main Screen | My League |
+| ![3](screenshots/main_screen_.png?raw=true) | ![4](screenshots/options.png?raw=true)
+
  
 * Created by Lorenzo Suarez *
