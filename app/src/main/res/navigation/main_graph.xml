@@ -30,7 +30,7 @@
 
     <fragment
         android:id="@+id/detailsFragment"
-        android:name="com.example.starwarscharacters.ui.DetailsFragment"
+        android:name="com.example.starwarscharacters.ui.details.DetailsFragment"
         android:label="{title}"
         tools:layout="@layout/fragment_details">
         <argument

@@ -1,4 +1,4 @@
-package com.example.starwarscharacters.ui
+package com.example.starwarscharacters.ui.details
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -18,7 +18,6 @@ import com.example.starwarscharacters.databinding.FragmentDetailsBinding
 import com.example.starwarscharacters.domain.RepositoryImpl
 import com.example.starwarscharacters.ui.viewModel.MainViewModel
 import com.example.starwarscharacters.ui.viewModel.ViewModelFactory
-import com.example.starwarscharacters.utils.showToast
 import kotlinx.android.synthetic.main.item_detail.view.*
 import kotlinx.coroutines.launch
 
