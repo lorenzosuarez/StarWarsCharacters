@@ -19,4 +19,4 @@ This is a clean architecture app example built with
 | ![3](screenshots/main_screen_.png?raw=true) | ![4](screenshots/options.png?raw=true)
 
  
-* Created by Lorenzo Suarez *
+* Created by Lorenzo Suarez 
