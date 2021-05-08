@@ -19,4 +19,8 @@ object AppConstants {
     const val MAX_CHARACTERS = 6
     const val MAX_PLANETS = 2
     const val MAX_STARSHIPS = 3
+
+    //SHARED PREFERENCES
+    const val PRIVATE_MODE = 0
+    const val PREF_NAME = "galactic-league"
 }

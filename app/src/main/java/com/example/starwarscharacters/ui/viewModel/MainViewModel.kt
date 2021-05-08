@@ -7,19 +7,25 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.*
 import com.example.starwarscharacters.R
 import com.example.starwarscharacters.application.AppConstants.MAX_CHARACTERS
+import com.example.starwarscharacters.application.AppConstants.MAX_PLANETS
 import com.example.starwarscharacters.application.AppConstants.MAX_RACES
+import com.example.starwarscharacters.application.AppConstants.MAX_STARSHIPS
 import com.example.starwarscharacters.application.AppConstants.TAG
 import com.example.starwarscharacters.data.model.*
 import com.example.starwarscharacters.domain.Repository
 import com.example.starwarscharacters.vo.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * Created by Lorenzo Suarez on 3/5/2021.
  */
 
 class MainViewModel(private val repository: Repository) : ViewModel() {
+    private val _existLeague = MutableLiveData(true)
+    val existLeague: LiveData<Boolean> = _existLeague
+
     private val _page = MutableLiveData<Int>()
     val page: LiveData<Int>
         get() = _page
@@ -58,34 +64,57 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
 
     private val hasNext = mutableStateOf(true)
 
-
     //Data LEAGUE
     private val characterListLiveData: MutableLiveData<List<Character>> = MutableLiveData()
     private var _characterList: MutableList<Character> = ArrayList()
-
     fun getCharactersFromLeague(): LiveData<List<Character>> {
         return characterListLiveData
     }
 
     private var raceListLiveData: MutableLiveData<List<Race>> = MutableLiveData()
     private var _raceList: MutableList<Race> = ArrayList()
-
     fun getRacesFromLeague(): LiveData<List<Race>> {
         return raceListLiveData
     }
 
     var starshipListLiveData: MutableLiveData<List<Starship>> = MutableLiveData()
-    var _starshipList: MutableList<Starship> = ArrayList()
+    private var _starshipList: MutableList<Starship> = ArrayList()
+    fun getStarshipsFromLeague(): LiveData<List<Starship>> {
+        return starshipListLiveData
+    }
 
     var planetListLiveData: MutableLiveData<List<Planet>> = MutableLiveData()
-    var _planetList: MutableList<Planet> = ArrayList()
-
+    private var _planetList: MutableList<Planet> = ArrayList()
+    fun getPlanetsFromLeague(): LiveData<List<Planet>> {
+        return planetListLiveData
+    }
 
     init {
         _listSize.value = 0
         _page.value = 1
         _loading.value = false
         _itemType.value = ItemType.CHARACTER
+    }
+
+    fun removeFromLeague(url: String, itemType: ItemType) {
+        when {
+            itemType.isCharacter() -> {
+                _characterList.removeAll { it.url == url }
+                characterListLiveData.value = _characterList
+            }
+            itemType.isRace() -> {
+                _raceList.removeAll { it.url == url }
+                raceListLiveData.value = _raceList
+            }
+            itemType.isStarship() -> {
+                _starshipList.removeAll { it.url == url }
+                starshipListLiveData.value = _starshipList
+            }
+            itemType.isPlanet() -> {
+                _planetList.removeAll { it.url == url }
+                planetListLiveData.value = _planetList
+            }
+        }
     }
 
     fun addToLeage(obj: Any, context: Context): String {
@@ -96,20 +125,35 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
             is Planet -> checkIfUploadPlanet(obj, context)
             else -> context.getString(R.string.unknown_error)
         }
-
     }
 
     private fun checkIfUploadPlanet(planet: Planet, context: Context): String {
-        return ""
+        return when {
+            _planetList.size >= MAX_PLANETS -> context.getString(R.string.maximum_planets_added)
+            _planetList.contains(planet) -> context.getString(R.string.already_exists)
+            else -> {
+                _planetList.add(planet)
+                planetListLiveData.value = _planetList
+                context.getString(R.string.added_gl)
+            }
+        }
     }
 
     private fun checkIfUploadStarship(starship: Starship, context: Context): String {
-        return ""
+        return when {
+            _starshipList.size >= MAX_STARSHIPS -> context.getString(R.string.maximum_starships_added)
+            _starshipList.contains(starship) -> context.getString(R.string.already_exists)
+            else -> {
+                _starshipList.add(starship)
+                starshipListLiveData.value = _starshipList
+                context.getString(R.string.added_gl)
+            }
+        }
     }
 
     private fun checkIfUploadRace(race: Race, context: Context): String {
         return when {
-            _raceList.size >= MAX_RACES -> context.getString(R.string.no_race_for_character)
+            _raceList.size >= MAX_RACES -> context.getString(R.string.maximum_races_added)
             _raceList.contains(race) -> context.getString(R.string.already_exists)
             else -> {
                 _raceList.add(race)
@@ -124,16 +168,9 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
             _characterList.size >= MAX_CHARACTERS -> context.getString(R.string.maximum_characters_added)
             _characterList.contains(character) -> context.getString(R.string.already_exists)
             else -> {
-                var containsCharacter: String? = null
-                _raceList.forEach {
-                    containsCharacter = it.people.find { url -> character.url == url }
-                }
-                if (containsCharacter == null) context.getString(R.string.no_race_for_character)
-                else {
-                    _characterList.add(character)
-                    characterListLiveData.value = _characterList
-                    context.getString(R.string.added_gl)
-                }
+                _characterList.add(character)
+                characterListLiveData.value = _characterList
+                context.getString(R.string.added_gl)
             }
         }
     }
@@ -276,32 +313,136 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
         _page.value = _page.value?.inc()
     }
 
-    fun insertToLeague(character: CharacterEntity) {
+    /*** DATA FROM DB ***/
+    fun getLocalData() {
         viewModelScope.launch {
-            repository.insertCharacter(character)
+            _loading.value = true
+            //Characters
+            _characterList.addAll(withContext(Dispatchers.IO) {
+                repository.getLocalCharacters().asCharacters()
+            })
+            characterListLiveData.value = _characterList
+            //Races
+            _raceList.addAll(withContext(Dispatchers.IO) { repository.getLocalRaces().asRaces() })
+            raceListLiveData.value = _raceList
+            //Starships
+            _starshipList.addAll(withContext(Dispatchers.IO) {
+                repository.getLocalStarships().asStarships()
+            })
+            starshipListLiveData.value = _starshipList
+            //Planets
+            _planetList.addAll(withContext(Dispatchers.IO) {
+                repository.getLocalPlanets().asPlanet()
+            })
+            planetListLiveData.value = _planetList
+            _loading.value = false
         }
     }
 
-    fun getLocalCharacters() = liveData(Dispatchers.IO) {
-        emit(Resource.Loading)
-        try {
-            emit(repository.getLocalCharacters())
-        } catch (e: Exception) {
-            emit(Resource.Failure(e))
+    fun characterInLeague(character: Character): Boolean =
+        _characterList.contains(character)
+
+    fun raceInLeague(race: Race): Boolean =
+        _raceList.contains(race)
+
+    fun starshipInLeague(starship: Starship): Boolean =
+        _starshipList.contains(starship)
+
+    fun planetInLeague(planet: Planet): Boolean =
+        _planetList.contains(planet)
+
+    fun createLeague(context: Context, onSuccess: (Boolean, String) -> Unit) {
+        if (_characterList.isEmpty()) {
+            onSuccess(false, context.getString(R.string.incomplete_data))
+            return
         }
 
+        var containsCharacter = false
+        _characterList.forEach { character ->
+            _raceList.forEach {
+                if (!containsCharacter) containsCharacter =
+                    when (it.people.contains(character.url)) {
+                        true -> true
+                        else -> false
+                    }
+            }
+        }
+        if (!containsCharacter) {
+            onSuccess(false, context.getString(R.string.no_race_for_character))
+            return
+        }
+        //Insert Characters
+        val charactersEntity: MutableList<CharacterEntity> = arrayListOf()
+        _characterList.map {
+            charactersEntity.add(it.asCharacterEntity())
+        }
+        insertEntitiesToLeague(charactersEntity = charactersEntity, type = ItemType.CHARACTER)
+        //Insert Race
+        val racesEntity: MutableList<RaceEntity> = arrayListOf()
+        _raceList.map {
+            racesEntity.add(it.asRaceEntity())
+        }
+        insertEntitiesToLeague(racesEntity = racesEntity, type = ItemType.RACE)
+        //Insert Starships
+        val starshipsEntity: MutableList<StarshipEntity> = arrayListOf()
+        _starshipList.map {
+            starshipsEntity.add(it.asStarshipEntity())
+        }
+        insertEntitiesToLeague(starshipsEntity = starshipsEntity, type = ItemType.STARSHIP)
+        //Insert Planets
+        val planetsEntity: MutableList<PlanetEntity> = arrayListOf()
+        _planetList.map {
+            planetsEntity.add(it.asPlanetEntity())
+        }
+        insertEntitiesToLeague(planetsEntity = planetsEntity, type = ItemType.PLANET)
+        onSuccess(true, context.getString(R.string.league_created))
     }
 
-    suspend fun characterInLeague(character: Character): Boolean =
-        repository.characterInLeague(character.url)
-
-    suspend fun raceInLeague(race: Race): Boolean? = false
-    suspend fun starshipInLeague(starship: Starship): Boolean? = false
-    suspend fun planetInLeague(planet: Planet): Boolean? = false
-
-    fun deleteFromLeague(characterEntity: CharacterEntity) {
+    fun cleanTables() {
         viewModelScope.launch {
-            repository.deleteCharacter(characterEntity)
+            repository.deleteCharacters()
+            repository.deleteRaces()
+            repository.deleteStarships()
+            repository.deletePlanets()
+        }
+
+        _characterList.clear()
+        _raceList.clear()
+        _starshipList.clear()
+        _planetList.clear()
+
+        characterListLiveData.value = _characterList
+        raceListLiveData.value = _raceList
+        starshipListLiveData.value = _starshipList
+        planetListLiveData.value = _planetList
+    }
+
+    private fun insertEntitiesToLeague(
+        charactersEntity: List<CharacterEntity>? = arrayListOf(),
+        racesEntity: List<RaceEntity>? = arrayListOf(),
+        starshipsEntity: List<StarshipEntity>? = arrayListOf(),
+        planetsEntity: List<PlanetEntity>? = arrayListOf(),
+        type: ItemType
+    ) {
+        when {
+            type.isCharacter() -> viewModelScope.launch {
+                repository.insertCharacters(charactersEntity!!)
+            }
+            type.isRace() -> viewModelScope.launch {
+                repository.insertRaces(racesEntity!!)
+            }
+            type.isStarship() -> viewModelScope.launch {
+                repository.insertStarships(starshipsEntity!!)
+            }
+            type.isPlanet() -> viewModelScope.launch {
+                repository.insertPlanets(planetsEntity!!)
+            }
+        }
+    }
+
+    fun switchLeagueStatus(status: Boolean) {
+        _existLeague.value?.let {
+            _existLeague.value = status
         }
     }
 

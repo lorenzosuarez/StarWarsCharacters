@@ -43,21 +43,49 @@ class DataSource(private val appDatabase: AppDatabase) {
     }
 
 
-    //Room
-    suspend fun insertCharacterIntoRoom(characterEntity: CharacterEntity){
-        appDatabase.itemDao().insertCharacterToLeague(characterEntity)
+    //ROOM
+    //CHARACTERS ->
+    suspend fun insertCharactersIntoRoom(charactersEntity: List<CharacterEntity>){
+        appDatabase.itemDao().insertCharactersToLeague(charactersEntity)
+    }
+    suspend fun getLocalCharacters(): List<CharacterEntity> {
+        return appDatabase.itemDao().getCharactersLeague()
+    }
+    suspend fun deleteCharactersFromRoom() {
+        appDatabase.itemDao().deleteCharactersFromLeague()
     }
 
-    suspend fun getLocalCharacters(): Resource<List<CharacterEntity>> {
-        return Resource.Success(appDatabase.itemDao().getCharactersLeague())
+    //RACES ->
+    suspend fun insertRacesIntoRoom(racesEntity: List<RaceEntity>){
+        appDatabase.itemDao().insertRacesToLeague(racesEntity)
+    }
+    suspend fun getLocalRaces(): List<RaceEntity> {
+        return appDatabase.itemDao().getRacesLeague()
+    }
+    suspend fun deleteRacesFromRoom() {
+        appDatabase.itemDao().deleteRacesFromLeague()
     }
 
-    suspend fun characterInLeague(url: String) : Boolean {
-        return appDatabase.itemDao().characterInLeague(url) != null
+    //STARSHIPS ->
+    suspend fun insertStarshipsIntoRoom(starshipsEntity: List<StarshipEntity>){
+        appDatabase.itemDao().insertStarshipsToLeague(starshipsEntity)
+    }
+    suspend fun getLocalStarships(): List<StarshipEntity> {
+        return appDatabase.itemDao().getStarshipsLeague()
+    }
+    suspend fun deleteStarshipsFromRoom() {
+        appDatabase.itemDao().deleteStarshipsFromLeague()
     }
 
-    suspend fun deleteCharacterFromRoom(characterEntity: CharacterEntity) {
-        appDatabase.itemDao().deleteCharacterFromLeague(characterEntity)
+    //PLANETS ->
+    suspend fun insertPlanetsIntoRoom(planetsEntity: List<PlanetEntity>){
+        appDatabase.itemDao().insertPlanetsToLeague(planetsEntity)
+    }
+    suspend fun getLocalPlanets(): List<PlanetEntity> {
+        return appDatabase.itemDao().getPlanetsLeague()
+    }
+    suspend fun deletePlanetsFromRoom() {
+        appDatabase.itemDao().deletePlanetsFromLeague()
     }
 
 }

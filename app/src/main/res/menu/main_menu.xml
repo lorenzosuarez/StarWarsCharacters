@@ -9,6 +9,7 @@
         app:showAsAction="always" />
 
     <item
+        android:enabled="false"
         android:id="@+id/statusInLeague"
         android:icon="@drawable/ic_star_off"
         android:title="@string/my_galactic_league"

@@ -1,12 +1,14 @@
 package com.example.starwarscharacters.ui
 
 import android.content.Context
+import android.content.SharedPreferences
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -15,6 +17,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import com.example.starwarscharacters.R
 import com.example.starwarscharacters.application.AppConstants.PAGE_SIZE
+import com.example.starwarscharacters.application.AppConstants.PREF_NAME
+import com.example.starwarscharacters.application.AppConstants.PRIVATE_MODE
 import com.example.starwarscharacters.application.AppDatabase
 import com.example.starwarscharacters.data.DataSource
 import com.example.starwarscharacters.data.model.*
@@ -25,6 +29,7 @@ import com.example.starwarscharacters.domain.RepositoryImpl
 import com.example.starwarscharacters.ui.viewModel.MainViewModel
 import com.example.starwarscharacters.ui.viewModel.ViewModelFactory
 import com.example.starwarscharacters.utils.hide
+import com.example.starwarscharacters.utils.onSNACK
 import com.example.starwarscharacters.utils.show
 import com.example.starwarscharacters.utils.showToast
 import com.example.starwarscharacters.vo.Resource
@@ -32,10 +37,10 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.options_bottom_sheet.*
 import kotlinx.android.synthetic.main.fragment_main.view.*
 import kotlinx.android.synthetic.main.item_row.*
 import kotlinx.android.synthetic.main.league_bottom_sheet.*
+import kotlinx.android.synthetic.main.options_bottom_sheet.*
 import java.util.*
 
 
@@ -60,10 +65,15 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     private lateinit var item: Item
     private lateinit var title: String
     private var page: Int = 1
+    private lateinit var sharedPref: SharedPreferences
+    private var leagueIsOpen: Boolean
+        get() = sharedPref.getBoolean(PREF_NAME, true)
+        set(value) = sharedPref.edit().putBoolean(PREF_NAME, value).apply()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        sharedPref = requireContext().getSharedPreferences(PREF_NAME, PRIVATE_MODE)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -106,6 +116,8 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         //League data observers
         viewModel.getCharactersFromLeague().observe(viewLifecycleOwner, charactersLeagueObserver)
         viewModel.getRacesFromLeague().observe(viewLifecycleOwner, racesLeagueObserver)
+        viewModel.getStarshipsFromLeague().observe(viewLifecycleOwner, starshipsLeagueObserver)
+        viewModel.getPlanetsFromLeague().observe(viewLifecycleOwner, planetsLeagueObserver)
 
         val bottomSheetOptions = BottomSheetDialog(requireContext())
         val bindingSheetOptions = DataBindingUtil.inflate<OptionsBottomSheetBinding>(
@@ -122,7 +134,8 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             bottomSheetOptions.cancel()
         }
         bindingSheetOptions.addToLeague.setOnClickListener {
-            showToast(viewModel.addToLeage(item, requireContext()))
+            if(leagueIsOpen) onSNACK(binding.root, viewModel.addToLeage(item, requireContext()))
+            else onSNACK(binding.root, requireContext().getString(R.string.league_blocked))
             bottomSheetOptions.cancel()
         }
 
@@ -133,10 +146,26 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             null,
             false
         )
-
         bottomSheetLeague.setContentView(bindingSheetLeague.root)
         bindingSheetLeague.createLeague.setOnClickListener {
-            bottomSheetLeague.cancel()
+            if (leagueIsOpen) {
+                viewModel.createLeague(requireContext()) { b: Boolean, s: String ->
+                    if (b) leagueIsOpen = false
+                    onSNACK(binding.root, s)
+                    bottomSheetLeague.cancel()
+                }
+            } else {
+                viewModel.cleanTables()
+                onSNACK(
+                    binding.root,
+                    requireContext()
+                        .getString(R.string.league_eliminated)
+                )
+                leagueIsOpen = true
+                bottomSheetLeague.cancel()
+            }
+
+            viewModel.switchLeagueStatus(leagueIsOpen)
         }
 
         binding.rvList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -158,6 +187,9 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             }
         )
 
+        viewModel.switchLeagueStatus(leagueIsOpen)
+        /** DATA FROM DB **/
+        viewModel.getLocalData()
     }
 
     private val itemsObserver = Observer<List<Item>> {
@@ -249,18 +281,56 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     }
 
     private val charactersLeagueObserver = Observer<List<Character>> { result ->
+        bindingSheetLeague.chipGroupCharacters.removeAllViews()
         result.map {
-            showToast(it.name)
+            bindingSheetLeague.chipGroupCharacters.addChip(
+                requireContext(),
+                it.name,
+                it.url,
+                it.itemType
+            )
         }
     }
-
     private val racesLeagueObserver = Observer<List<Race>> { result ->
+        bindingSheetLeague.chipGroupRaces.removeAllViews()
         result.map {
-            bindingSheetLeague.chipGroupRaces.addChip(requireContext(), it.name)
+            bindingSheetLeague.chipGroupRaces.addChip(
+                requireContext(),
+                it.name,
+                it.url,
+                it.itemType
+            )
+        }
+    }
+    private val starshipsLeagueObserver = Observer<List<Starship>> { result ->
+        bindingSheetLeague.chipGroupStarships.removeAllViews()
+        result.map {
+            bindingSheetLeague.chipGroupStarships.addChip(
+                requireContext(),
+                it.name,
+                it.url,
+                it.itemType
+            )
+        }
+    }
+    private val planetsLeagueObserver = Observer<List<Planet>> { result ->
+        bindingSheetLeague.chipGroupPlanets.removeAllViews()
+        result.map {
+            bindingSheetLeague.chipGroupPlanets.addChip(
+                requireContext(),
+                it.name,
+                it.url,
+                it.itemType
+            )
         }
     }
 
-    private fun ChipGroup.addChip(context: Context, label: String){
+    private fun ChipGroup.addChip(
+        context: Context,
+        label: String,
+        url: String,
+        itemType: ItemType
+    ) {
         Chip(context).apply {
             id = View.generateViewId()
             text = label
@@ -268,6 +338,13 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             isCheckable = true
             isCheckedIconVisible = false
             isFocusable = true
+            tag = itemType
+            height = 55
+            isCloseIconVisible = true
+            setOnCheckedChangeListener { _, _ ->
+                if (leagueIsOpen) viewModel.removeFromLeague(url, itemType)
+                else onSNACK(binding.root, requireContext().getString(R.string.league_blocked))
+            }
             addView(this)
         }
     }
@@ -281,6 +358,24 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
             R.id.myGalacticLeague -> {
+                bindingSheetLeague.createLeague.backgroundTintList = when (leagueIsOpen) {
+                    true -> ColorStateList.valueOf(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.green
+                        )
+                    )
+                    else -> ColorStateList.valueOf(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.red
+                        )
+                    )
+                }
+                bindingSheetLeague.createLeague.text = when (leagueIsOpen) {
+                    true -> getString(R.string.create_league)
+                    else -> getString(R.string.delete_league)
+                }
                 bottomSheetLeague.show()
                 false
             }
@@ -292,4 +387,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         if (viewModel.items.value == null) viewModel.runFilter()
         super.onResume()
     }
+
 }
+

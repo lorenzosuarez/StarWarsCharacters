@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -79,154 +78,222 @@
             app:layout_constraintVertical_bias="0.0">
 
             <!-- Races -->
-            <TextView
-                android:id="@+id/races"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/race"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/racesContainer"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/hRaces"
                 app:layout_constraintHorizontal_bias="0.01"
-                app:layout_constraintRight_toLeftOf="@+id/hRaces"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0" />
-
-            <HorizontalScrollView
-                android:id="@+id/hRaces"
-                android:layout_width="0dp"
-                android:layout_height="22dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.01"
-                app:layout_constraintLeft_toRightOf="@+id/races"
-                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0">
 
-                <com.google.android.material.chip.ChipGroup
-                    android:id="@+id/chipGroupRaces"
+                <TextView
+                    android:id="@+id/races"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center"
-                    android:clickable="false"
-                    android:padding="@dimen/margin_extra_small" />
+                    android:layout_height="0dp"
+                    android:gravity="center"
+                    android:text="@string/race"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/hRaces"
+                    app:layout_constraintHorizontal_bias="0.01"
+                    app:layout_constraintRight_toLeftOf="@+id/hRaces"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.5" />
 
-            </HorizontalScrollView>
+                <HorizontalScrollView
+                    android:id="@+id/hRaces"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="10dp"
+                    android:scrollbars="none"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintHorizontal_bias="0.01"
+                    app:layout_constraintLeft_toRightOf="@+id/races"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chipGroupRaces"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:clickable="false"
+                        android:padding="@dimen/margin_extra_small" />
+
+                </HorizontalScrollView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- Characters -->
-            <TextView
-                android:id="@+id/characters"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/character"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/charactersContainer"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/hCharacters"
                 app:layout_constraintHorizontal_bias="0.01"
-                app:layout_constraintRight_toLeftOf="@+id/hCharacters"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/races"
-                app:layout_constraintVertical_bias="0" />
-
-            <HorizontalScrollView
-                android:id="@+id/hCharacters"
-                android:layout_width="0dp"
-                android:layout_height="22dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.01"
-                app:layout_constraintLeft_toRightOf="@+id/characters"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/hRaces"
+                app:layout_constraintTop_toBottomOf="@id/racesContainer"
                 app:layout_constraintVertical_bias="0">
 
-                <com.google.android.material.chip.ChipGroup
+                <TextView
+                    android:id="@+id/characters"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:clickable="false"
-                    android:padding="@dimen/margin_extra_small" />
+                    android:layout_height="0dp"
+                    android:gravity="center"
+                    android:text="@string/character"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/hCharacters"
+                    app:layout_constraintHorizontal_bias="0.01"
+                    app:layout_constraintRight_toLeftOf="@+id/hCharacters"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.5" />
 
-            </HorizontalScrollView>
+                <HorizontalScrollView
+                    android:id="@+id/hCharacters"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="10dp"
+                    android:scrollbars="none"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintHorizontal_bias="0.01"
+                    app:layout_constraintLeft_toRightOf="@+id/characters"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chipGroupCharacters"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:clickable="false"
+                        android:padding="@dimen/margin_extra_small" />
+
+                </HorizontalScrollView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <!-- Starships -->
-            <TextView
-                android:id="@+id/starships"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/starships"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/starshipsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/hStarships"
                 app:layout_constraintHorizontal_bias="0.01"
-                app:layout_constraintRight_toLeftOf="@+id/hStarships"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/characters"
-                app:layout_constraintVertical_bias="0" />
-
-            <HorizontalScrollView
-                android:id="@+id/hStarships"
-                android:layout_width="0dp"
-                android:layout_height="22dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.01"
-                app:layout_constraintLeft_toRightOf="@+id/starships"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/hCharacters"
+                app:layout_constraintTop_toBottomOf="@id/charactersContainer"
                 app:layout_constraintVertical_bias="0">
 
-                <com.google.android.material.chip.ChipGroup
+                <TextView
+                    android:id="@+id/starships"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:clickable="false"
-                    android:padding="@dimen/margin_extra_small" />
+                    android:layout_height="0dp"
+                    android:gravity="center"
+                    android:text="@string/starships"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/hStarships"
+                    app:layout_constraintHorizontal_bias="0.01"
+                    app:layout_constraintRight_toLeftOf="@+id/hStarships"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0" />
 
-            </HorizontalScrollView>
+                <HorizontalScrollView
+                    android:id="@+id/hStarships"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="10dp"
+                    android:scrollbars="none"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintHorizontal_bias="0.01"
+                    app:layout_constraintLeft_toRightOf="@+id/starships"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chipGroupStarships"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:clickable="false"
+                        android:padding="@dimen/margin_extra_small" />
+
+                </HorizontalScrollView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
             <!-- Planets -->
-            <TextView
-                android:id="@+id/planets"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/planets"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/planetsContainer"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/hPlanets"
                 app:layout_constraintHorizontal_bias="0.01"
-                app:layout_constraintRight_toLeftOf="@+id/hPlanets"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/starships"
-                app:layout_constraintVertical_bias="0" />
-
-            <HorizontalScrollView
-                android:id="@+id/hPlanets"
-                android:layout_width="0dp"
-                android:layout_height="22dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintHorizontal_bias="0.01"
-                app:layout_constraintLeft_toRightOf="@+id/planets"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/hStarships"
+                app:layout_constraintTop_toBottomOf="@id/starshipsContainer"
                 app:layout_constraintVertical_bias="0">
 
-                <com.google.android.material.chip.ChipGroup
+                <TextView
+                    android:id="@+id/planets"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:clickable="false"
-                    android:padding="@dimen/margin_extra_small" />
+                    android:layout_height="0dp"
+                    android:gravity="center"
+                    android:text="@string/planets"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/hPlanets"
+                    app:layout_constraintHorizontal_bias="0.01"
+                    app:layout_constraintRight_toLeftOf="@+id/hPlanets"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0" />
 
-            </HorizontalScrollView>
+                <HorizontalScrollView
+                    android:id="@+id/hPlanets"
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="10dp"
+                    android:scrollbars="none"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintHorizontal_bias="0.01"
+                    app:layout_constraintLeft_toRightOf="@+id/planets"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0">
+
+                    <com.google.android.material.chip.ChipGroup
+                        android:id="@+id/chipGroupPlanets"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:clickable="false"
+                        android:padding="@dimen/margin_extra_small" />
+
+                </HorizontalScrollView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.button.MaterialButton
-            android:backgroundTint="?colorOnBackground"
-            android:textColor="?color"
             android:id="@+id/createLeague"
             android:layout_width="match_parent"
             android:layout_height="60dp"
+            android:backgroundTint="@color/green"
             android:text="@string/create_league"
+            android:textColor="@color/white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

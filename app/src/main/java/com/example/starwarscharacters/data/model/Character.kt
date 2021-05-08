@@ -3,8 +3,6 @@ package com.example.starwarscharacters.data.model
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import androidx.room.TypeConverters
-import com.example.starwarscharacters.vo.Converters
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
 
@@ -78,7 +76,7 @@ data class CharacterEntity(
     val url: String
 )
 
-fun Character.asCharacter(): CharacterEntity =
+fun Character.asCharacterEntity(): CharacterEntity =
     CharacterEntity(
         this.name,
         this.height,
@@ -97,3 +95,24 @@ fun Character.asCharacter(): CharacterEntity =
         this.edited,
         this.url
     )
+
+fun List<CharacterEntity>.asCharacters(): List<Character> = this.map {
+    Character(
+        it.name,
+        it.height,
+        it.height,
+        it.hairColor,
+        it.skinColor,
+        it.eyeColor,
+        it.birthYear,
+        it.gender,
+        it.homeWorld,
+        it.films,
+        it.species,
+        it.vehicles,
+        it.starships,
+        it.created,
+        it.edited,
+        it.url
+    )
+}

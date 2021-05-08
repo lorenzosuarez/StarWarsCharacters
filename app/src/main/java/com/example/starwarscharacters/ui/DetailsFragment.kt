@@ -92,41 +92,6 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
         super.onPrepareOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when (item.itemId) {
-            R.id.statusInLeague -> {
-                when {
-                    itemType.isCharacter() -> {
-                        val character = (itemReceived as Character)
-                        when (isInTheLeague) {
-                            true -> viewModel.deleteFromLeague(character.asCharacter())
-                            else -> viewModel.insertToLeague(character.asCharacter())
-                        }
-                    }
-                    itemType.isRace() -> {
-                    }
-                    itemType.isStarship() -> {
-                    }
-                    itemType.isPlanet() -> {
-                    }
-                }
-
-                isInTheLeague = isInTheLeague?.not()
-                showToast(
-                    requireContext().getString(
-                        when (isInTheLeague) {
-                            true -> R.string.added_gl
-                            else -> R.string.removed_gl
-                        }
-                    )
-                )
-                updateIcon(item)
-                false
-            }
-            else -> false
-        }
-    }
-
     private fun updateIcon(item: MenuItem) {
         item.icon = when (isInTheLeague) {
             true -> ContextCompat.getDrawable(requireContext(), R.drawable.ic_star_on)
@@ -181,7 +146,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
         setValue(requireContext().getString(R.string.hair_colors), race.hairColor)
         setValue(requireContext().getString(R.string.eye_colors), race.eyeColor)
         setValue(requireContext().getString(R.string.average_lifespan), race.averageLifespan)
-        setValue(requireContext().getString(R.string.homeworld), race.homeWorld)
+        race.homeWorld?.let { setValue(requireContext().getString(R.string.homeworld), it) }
         setValue(requireContext().getString(R.string.language), race.language)
         setValue(requireContext().getString(R.string.people), race.people.size.toString())
         setValue(requireContext().getString(R.string.films), race.films.size.toString())

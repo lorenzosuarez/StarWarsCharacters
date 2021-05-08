@@ -89,6 +89,8 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <Button
+                android:textStyle="bold"
+                android:textColor="?colorOnBackground"
                 android:id="@+id/addToLeague"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="match_parent"

@@ -16,10 +16,21 @@ interface Repository {
     suspend fun getRaces(): Resource<RaceList>
     suspend fun getStarships(): Resource<StarshipList>
     suspend fun getPlanets(): Resource<PlanetList>
-    //Room DB
-    suspend fun getLocalCharacters(): Resource<List<CharacterEntity>>
-    suspend fun insertCharacter(character: CharacterEntity)
-    suspend fun deleteCharacter(character: CharacterEntity)
-
-    suspend fun characterInLeague(url: String) : Boolean
+    //Room
+    //CHARACTERS ->
+    suspend fun getLocalCharacters(): List<CharacterEntity>
+    suspend fun insertCharacters(characters: List<CharacterEntity>)
+    suspend fun deleteCharacters()
+    //RACES ->
+    suspend fun getLocalRaces(): List<RaceEntity>
+    suspend fun insertRaces(races: List<RaceEntity>)
+    suspend fun deleteRaces()
+    //STARSHIPS
+    suspend fun getLocalStarships(): List<StarshipEntity>
+    suspend fun insertStarships(starships: List<StarshipEntity>)
+    suspend fun deleteStarships()
+    //PLANETS
+    suspend fun getLocalPlanets(): List<PlanetEntity>
+    suspend fun insertPlanets(planets: List<PlanetEntity>)
+    suspend fun deletePlanets()
 }

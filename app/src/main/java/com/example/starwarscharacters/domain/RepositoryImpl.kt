@@ -8,7 +8,7 @@ import com.example.starwarscharacters.vo.Resource
  * Created by Lorenzo Suarez on 3/5/2021.
  */
 class RepositoryImpl(private val dataSource: DataSource) : Repository {
-
+    //Network
     override suspend fun charactersFromPage(page: Int): CharacterList {
         return dataSource.charactersFromPage(page = page)
     }
@@ -41,20 +41,56 @@ class RepositoryImpl(private val dataSource: DataSource) : Repository {
         return dataSource.getPlanets()
     }
 
-
-    //
-    override suspend fun getLocalCharacters(): Resource<List<CharacterEntity>> {
+    //Room
+    //CHARACTERS
+    override suspend fun getLocalCharacters(): List<CharacterEntity> {
         return dataSource.getLocalCharacters()
     }
 
-    override suspend fun insertCharacter(characterEntity: CharacterEntity) {
-        dataSource.insertCharacterIntoRoom(characterEntity)
+    override suspend fun insertCharacters(characters: List<CharacterEntity>) {
+        dataSource.insertCharactersIntoRoom(characters)
     }
 
-    override suspend fun deleteCharacter(characterEntity: CharacterEntity) {
-        dataSource.deleteCharacterFromRoom(characterEntity)
+    override suspend fun deleteCharacters() {
+        dataSource.deleteCharactersFromRoom()
     }
 
-    override suspend fun characterInLeague(url: String) : Boolean =
-        dataSource.characterInLeague(url)
+    //RACES
+    override suspend fun getLocalRaces(): List<RaceEntity> {
+        return dataSource.getLocalRaces()
+    }
+
+    override suspend fun insertRaces(races: List<RaceEntity>) {
+        dataSource.insertRacesIntoRoom(races)
+    }
+
+    override suspend fun deleteRaces() {
+        dataSource.deleteRacesFromRoom()
+    }
+
+    //SARSHIPS
+    override suspend fun getLocalStarships(): List<StarshipEntity> {
+        return dataSource.getLocalStarships()
+    }
+
+    override suspend fun insertStarships(starships: List<StarshipEntity>) {
+        dataSource.insertStarshipsIntoRoom(starships)
+    }
+
+    override suspend fun deleteStarships() {
+        dataSource.deleteStarshipsFromRoom()
+    }
+
+    //PLANETS
+    override suspend fun getLocalPlanets(): List<PlanetEntity> {
+        return dataSource.getLocalPlanets()
+    }
+
+    override suspend fun insertPlanets(planets: List<PlanetEntity>) {
+        dataSource.insertPlanetsIntoRoom(planets)
+    }
+
+    override suspend fun deletePlanets() {
+        dataSource.deletePlanetsFromRoom()
+    }
 }

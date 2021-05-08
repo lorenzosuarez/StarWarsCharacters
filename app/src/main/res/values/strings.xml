@@ -1,11 +1,12 @@
 <resources>
     <string name="app_name">StarWarsCharacters</string>
+    <string name="app_title">Star Wars Characters</string>
     <string name="my_galactic_league">My Galactic League</string>
     <string name="get_data_error">There was an error getting the data</string>
-    <string name="character">Character</string>
+    <string name="character">Characters</string>
     <string name="planets">Planets</string>
     <string name="starships">Starships</string>
-    <string name="race">Race</string>
+    <string name="race">Races</string>
     <string name="details">Details</string>
 
     <string name="unknown">unknown</string>
@@ -74,16 +75,19 @@
     <string name="add_to_league">Add to league</string>
     <string name="create_league">Create League</string>
     <string name="unknown_error">unknown_error</string>
+    <string name="league_created">League created</string>
+    <string name="league_blocked">League blocked</string>
+    <string name="league_eliminated">League eliminated</string>
 
     <string name="no_race_for_character">Only characters of the selected races can be added</string>
     <string name="already_exists">Already exists in your league</string>
+    <string name="incomplete_data">You must add at least one character and race</string>
 
     <string name="maximum_characters_added">Maximum Characters added</string>
     <string name="maximum_races_added">Maximum Races added</string>
     <string name="maximum_starships_added">Maximum Starships added</string>
     <string name="maximum_planets_added">Maximum Planets added</string>
-
-
+    <string name="delete_league">Delete League</string>
 
 
 </resources>
