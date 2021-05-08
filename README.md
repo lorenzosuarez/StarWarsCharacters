@@ -1,8 +1,6 @@
 # StarWarsCharacters
 Kotlin app that shows a list of characters using the api SWAPI (https://swapi.dev)
 
-# StarWarsCharacters
-
 This is a clean architecture app example built with
 
 - Coroutines
@@ -13,9 +11,9 @@ This is a clean architecture app example built with
 - Navigation Components
 - DataBinding
 
-![Test Image 4]https://github.com/LorenzoSuarez/StarWarsCharacters/blob/master/screenshots/main_screen_dark.png?raw=true
-![Test Image 4]https://github.com/LorenzoSuarez/StarWarsCharacters/blob/master/screenshots/main_screen_.png?raw=true
-![Test Image 4]https://github.com/LorenzoSuarez/StarWarsCharacters/blob/master/screenshots/options_dark.png?raw=true
-![Test Image 4]https://github.com/LorenzoSuarez/StarWarsCharacters/blob/master/screenshots/options.png?raw=true
-
+![main_screen_dark](/screenshots/main_screen_dark.png?raw=true "First screen")
+![main_screen](/screenshots/main_screen_.png?raw=true "Second screen")
+![main_screen_](/screenshots/options_dark.png?raw=true "Third screen")
+![main_screen_](/screenshots/options.png?raw=true "Fourth screen")
+ 
 * Created by Lorenzo Suarez *
