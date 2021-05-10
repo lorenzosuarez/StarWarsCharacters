@@ -176,7 +176,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             }
         })
         binding.swipeRefresh.setOnRefreshListener {
-            viewModel.runFilter()
+            viewModel.runFilter(viewModel.itemType.value)
         }
         binding.rvList.adapter = MainItemsAdapter(
             requireContext(),

@@ -11,9 +11,5 @@ s
 Capp/src/main/java/com/example/starwarscharacters/data/model/Item.kt,3\c\3c065bba08b242c823f5700a503dc12981802db5
 z
 Japp/src/main/java/com/example/starwarscharacters/data/remote/WebService.kt,7\b\7b3a3e1686ae431080b187a7ef4f7944f68c9b9b
-q
-Aapp/src/main/java/com/example/starwarscharacters/vo/Converters.kt,e\d\ed3d04f06cf4080279112cb4116786b99ef03f5a
-u
-Eapp/src/main/java/com/example/starwarscharacters/vo/RetrofitClient.kt,e\e\eed9967eb5e609e795f364047690e97b613b8564
 x
 Happ/src/main/java/com/example/starwarscharacters/utils/BaseViewHolder.kt,7\e\7e4580e5e2532d347475b1f225cd9686f24330e6

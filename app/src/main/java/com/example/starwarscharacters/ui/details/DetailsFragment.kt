@@ -168,7 +168,7 @@ class DetailsFragment : Fragment(R.layout.fragment_details) {
             requireContext().getString(R.string.starships),
             character.starships.size.toString()
         )
-        setValue(requireContext().getString(R.string.created), character.created)
+        setValue(requireContext().getString(R.string.created), character.created.toString())
         setValue(requireContext().getString(R.string.edited), character.edited)
         setValue(requireContext().getString(R.string.url), character.url)
     }
