@@ -69,10 +69,44 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     private var leagueIsOpen: Boolean
         get() = sharedPref.getBoolean(PREF_NAME, true)
         set(value) = sharedPref.edit().putBoolean(PREF_NAME, value).apply()
+    private var loading = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
+        viewModel.items.observe(this, itemsObserver)
+        viewModel.character.observe(this, charactersObserver)
+        viewModel.races.observe(this, racesObserver)
+        viewModel.starships.observe(this, starshipsObserver)
+        viewModel.planets.observe(this, planetsObserver)
+        viewModel.loading.observe(this, {
+            loading = it
+            if (!loading) binding.rvList.adapter!!.notifyDataSetChanged()
+        })
+        viewModel.itemType.observe(this, {
+            this.page = 1
+        })
+        viewModel.page.observe(this, { page ->
+            if (page != this.page) {
+                viewModel.nextPage()
+                this.page = page
+            }
+        })
+        viewModel.listSize.observe(this, { size ->
+            if (size.plus(1) >= (page * PAGE_SIZE) && !loading) {
+                viewModel.incrementNumberPage()
+            }
+        })
+
+        //League data observers
+        viewModel.getCharactersFromLeague().observe(this, charactersLeagueObserver)
+        viewModel.getRacesFromLeague().observe(this, racesLeagueObserver)
+        viewModel.getStarshipsFromLeague().observe(this, starshipsLeagueObserver)
+        viewModel.getPlanetsFromLeague().observe(this, planetsLeagueObserver)
+
+        /** Get local data **/
+        viewModel.getLocalData()
         sharedPref = requireContext().getSharedPreferences(PREF_NAME, PRIVATE_MODE)
     }
 
@@ -87,37 +121,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         binding = FragmentMainBinding.bind(view)
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        var loading = false
 
-        viewModel.items.observe(viewLifecycleOwner, itemsObserver)
-        viewModel.character.observe(viewLifecycleOwner, charactersObserver)
-        viewModel.races.observe(viewLifecycleOwner, racesObserver)
-        viewModel.starships.observe(viewLifecycleOwner, starshipsObserver)
-        viewModel.planets.observe(viewLifecycleOwner, planetsObserver)
-        viewModel.loading.observe(viewLifecycleOwner, {
-            loading = it
-            if (!loading) binding.rvList.adapter!!.notifyDataSetChanged()
-        })
-        viewModel.itemType.observe(viewLifecycleOwner, {
-            this.page = 1
-        })
-        viewModel.page.observe(viewLifecycleOwner, { page ->
-            if (page != this.page) {
-                viewModel.nextPage()
-                this.page = page
-            }
-        })
-        viewModel.listSize.observe(viewLifecycleOwner, { size ->
-            if (size.plus(1) >= (page * PAGE_SIZE) && !loading) {
-                viewModel.incrementNumberPage()
-            }
-        })
-
-        //League data observers
-        viewModel.getCharactersFromLeague().observe(viewLifecycleOwner, charactersLeagueObserver)
-        viewModel.getRacesFromLeague().observe(viewLifecycleOwner, racesLeagueObserver)
-        viewModel.getStarshipsFromLeague().observe(viewLifecycleOwner, starshipsLeagueObserver)
-        viewModel.getPlanetsFromLeague().observe(viewLifecycleOwner, planetsLeagueObserver)
 
         val bottomSheetOptions = BottomSheetDialog(requireContext())
         val bindingSheetOptions = DataBindingUtil.inflate<OptionsBottomSheetBinding>(
@@ -188,8 +192,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         )
 
         viewModel.switchLeagueStatus(leagueIsOpen)
-        /** DATA FROM DB **/
-        viewModel.getLocalData()
     }
 
     private val itemsObserver = Observer<List<Item>> {
@@ -389,4 +391,3 @@ class MainFragment : Fragment(R.layout.fragment_main) {
     }
 
 }
-

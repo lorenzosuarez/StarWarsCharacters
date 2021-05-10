@@ -38,8 +38,8 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
     val loading: LiveData<Boolean>
         get() = _loading
 
-    private val _itemType = MutableLiveData<ItemType>()
-    val itemType: LiveData<ItemType>
+    private val _itemType = MutableLiveData<ItemType?>()
+    val itemType: MutableLiveData<ItemType?>
         get() = _itemType
 
     private val _items = MutableLiveData<List<Item>>()
@@ -241,6 +241,7 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
     fun runFilter(itemType: ItemType? = ItemType.CHARACTER) {
         if (itemType != null) {
             if (_itemType.value != itemType) _items.value = emptyList()
+            _itemType.value = itemType
 
             when {
                 itemType.isCharacter() -> {
@@ -315,26 +316,37 @@ class MainViewModel(private val repository: Repository) : ViewModel() {
 
     /*** DATA FROM DB ***/
     fun getLocalData() {
+
         viewModelScope.launch {
             _loading.value = true
             //Characters
-            _characterList.addAll(withContext(Dispatchers.IO) {
-                repository.getLocalCharacters().asCharacters()
-            })
-            characterListLiveData.value = _characterList
+            if (_characterList.isEmpty()) {
+                _characterList.addAll(withContext(Dispatchers.IO) {
+                    repository.getLocalCharacters().asCharacters()
+                })
+                characterListLiveData.value = _characterList
+            }
             //Races
-            _raceList.addAll(withContext(Dispatchers.IO) { repository.getLocalRaces().asRaces() })
-            raceListLiveData.value = _raceList
+            if (_raceList.isEmpty()) {
+                _raceList.addAll(withContext(Dispatchers.IO) {
+                    repository.getLocalRaces().asRaces()
+                })
+                raceListLiveData.value = _raceList
+            }
             //Starships
-            _starshipList.addAll(withContext(Dispatchers.IO) {
-                repository.getLocalStarships().asStarships()
-            })
+            if (_starshipList.isEmpty()) {
+                _starshipList.addAll(withContext(Dispatchers.IO) {
+                    repository.getLocalStarships().asStarships()
+                })
+            }
             starshipListLiveData.value = _starshipList
             //Planets
-            _planetList.addAll(withContext(Dispatchers.IO) {
-                repository.getLocalPlanets().asPlanet()
-            })
-            planetListLiveData.value = _planetList
+            if (_planetList.isEmpty()) {
+                _planetList.addAll(withContext(Dispatchers.IO) {
+                    repository.getLocalPlanets().asPlanet()
+                })
+                planetListLiveData.value = _planetList
+            }
             _loading.value = false
         }
     }
