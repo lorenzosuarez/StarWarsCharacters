@@ -88,6 +88,7 @@
     <string name="maximum_starships_added">Maximum Starships added</string>
     <string name="maximum_planets_added">Maximum Planets added</string>
     <string name="delete_league">Delete League</string>
+    <string name="author">Lorenzo Suarez</string>
 
 
 </resources>

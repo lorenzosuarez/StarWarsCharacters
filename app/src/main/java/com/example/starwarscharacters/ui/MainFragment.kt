@@ -4,10 +4,8 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuInflater
-import android.view.MenuItem
-import android.view.View
+import android.view.*
+import android.view.animation.Animation
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
@@ -82,7 +80,12 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         viewModel.planets.observe(this, planetsObserver)
         viewModel.loading.observe(this, {
             loading = it
-            if (!loading) binding.rvList.adapter!!.notifyDataSetChanged()
+            if (!loading) {
+                binding.rvList.adapter!!.notifyDataSetChanged()
+                val itemsCount: Int = binding.rvList.adapter?.itemCount ?: 0
+                if (itemsCount > PAGE_SIZE)
+                    binding.rvList.scrollToPosition(itemsCount)
+            }
         })
         viewModel.itemType.observe(this, {
             this.page = 1
@@ -99,14 +102,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             }
         })
 
-        //League data observers
-        viewModel.getCharactersFromLeague().observe(this, charactersLeagueObserver)
-        viewModel.getRacesFromLeague().observe(this, racesLeagueObserver)
-        viewModel.getStarshipsFromLeague().observe(this, starshipsLeagueObserver)
-        viewModel.getPlanetsFromLeague().observe(this, planetsLeagueObserver)
-
-        /** Get local data **/
-        viewModel.getLocalData()
         sharedPref = requireContext().getSharedPreferences(PREF_NAME, PRIVATE_MODE)
     }
 
@@ -122,6 +117,11 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
+        //League data observers
+        viewModel.getCharactersFromLeague().observe(viewLifecycleOwner, charactersLeagueObserver)
+        viewModel.getRacesFromLeague().observe(viewLifecycleOwner, racesLeagueObserver)
+        viewModel.getStarshipsFromLeague().observe(viewLifecycleOwner, starshipsLeagueObserver)
+        viewModel.getPlanetsFromLeague().observe(viewLifecycleOwner, planetsLeagueObserver)
 
         val bottomSheetOptions = BottomSheetDialog(requireContext())
         val bindingSheetOptions = DataBindingUtil.inflate<OptionsBottomSheetBinding>(
@@ -138,7 +138,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
             bottomSheetOptions.cancel()
         }
         bindingSheetOptions.addToLeague.setOnClickListener {
-            if(leagueIsOpen) onSNACK(binding.root, viewModel.addToLeage(item, requireContext()))
+            if (leagueIsOpen) onSNACK(binding.root, viewModel.addToLeage(item, requireContext()))
             else onSNACK(binding.root, requireContext().getString(R.string.league_blocked))
             bottomSheetOptions.cancel()
         }
@@ -190,7 +190,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
                 bottomSheetOptions.show()
             }
         )
-
+        
         viewModel.switchLeagueStatus(leagueIsOpen)
     }
 
