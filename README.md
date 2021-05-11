@@ -10,6 +10,7 @@ This is a clean architecture app example built with
 - Room
 - Navigation Components
 - DataBinding
+- MotionLayout
 
 # Screenshots
 | Main Screen Dark | My League Dark |
